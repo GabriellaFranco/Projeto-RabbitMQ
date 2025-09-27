@@ -45,7 +45,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id")
     )
-    private List<Authority> authorities = new ArrayList<>();
+    private List<Authority> authorities;
 
     @Column(nullable = true)
     @OneToOne(mappedBy = "user")
