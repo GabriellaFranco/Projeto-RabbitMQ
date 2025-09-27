@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,11 +23,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
     @Column(nullable = false, unique = true)
-    private String email;
+    private String username;
 
     @Column(nullable = false)
     private String password;
@@ -48,5 +46,13 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id")
     )
     private List<Authority> authorities = new ArrayList<>();
+
+    @Column(nullable = true)
+    @OneToOne(mappedBy = "user")
+    private Customer customer;
+
+    @Column(nullable = true)
+    @OneToOne(mappedBy = "user")
+    private SupportAgent supportAgent;
 
 }
