@@ -1,10 +1,16 @@
 package com.enterprise.suporte.mapper;
 
+import com.enterprise.suporte.dto.ticket.AssignTicketPriority;
 import com.enterprise.suporte.dto.ticket.TicketRequestDTO;
 import com.enterprise.suporte.dto.ticket.TicketResponseDTO;
+import com.enterprise.suporte.dto.ticket.UpdateTicketStatusDTO;
+import com.enterprise.suporte.enuns.TicketStatus;
 import com.enterprise.suporte.model.Customer;
 import com.enterprise.suporte.model.Ticket;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class TicketMapper {
@@ -45,5 +51,13 @@ public class TicketMapper {
                         .message(notification.getMessage())
                         .build()).toList())
                 .build();
+    }
+
+    public void updateTicketStatus(UpdateTicketStatusDTO updateDTO, Ticket ticket) {
+        Optional.ofNullable(updateDTO.newStatus()).ifPresent(ticket::setStatus);
+    }
+
+    public void assignTicketPriority(AssignTicketPriority priorityDTO, Ticket ticket) {
+        Optional.ofNullable(priorityDTO.priority()).ifPresent(ticket::setPriority);
     }
 }
