@@ -1,13 +1,11 @@
-package com.enterprise.suporte.dto.customer;
+package com.enterprise.suporte.dto.supportagent;
 
 import com.enterprise.suporte.enuns.UserProfile;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 
-import java.time.LocalDate;
-
 @Builder
-public record CustomerRequestDTO(
+public record SupportAgentRequestDTO(
 
         @NotBlank
         @Pattern(regexp = "^[A-Za-zÀ-ÿ\\s]+$", message = "Apenas letras são permitidas neste campo")
@@ -22,12 +20,9 @@ public record CustomerRequestDTO(
         @Size(min = 6, max = 20, message = "A senha deve conter entre 6 e 20 caracteres")
         String password,
 
-        @NotBlank
-        @Pattern(regexp = "^(\\+?\\d{2})\\s*\\(?(\\d{2})\\)?\\s*(\\d{4,5})[-\\s]?(\\d{4})$",
-        message = "Por favor, insira seu número de telefone no formato: 55(XX) XXXXX-XXXX ou 55(XX) XXXX-XXXX")
-        String phone,
-
         @NotNull
-        UserProfile profile
+        @Pattern(regexp = "^[0-9]+$", message = "Apenas números são permitidos neste campo")
+        @Positive(message = "A capacidade máxima deve ser um valor positivo")
+        int maxCapacity
 ) {
 }
