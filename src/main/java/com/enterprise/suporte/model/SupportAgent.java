@@ -28,11 +28,17 @@ public class SupportAgent {
     private String email;
 
     @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
     private int maxCapacity;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AgentStatus status;
+
+    @Column(nullable = false)
+    private Boolean isActive;
 
     @Column(nullable = false)
     private LocalDate createdAt;
