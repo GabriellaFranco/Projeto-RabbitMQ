@@ -18,22 +18,36 @@ import java.util.List;
 @Table(name = "tickets")
 public class Ticket {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String description;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private TicketPriority priority;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private TicketStatus status;
+
+    @Column(nullable = false)
     private LocalDateTime openedAt;
+
+    @Column(nullable = false)
     private LocalDateTime closedAt;
 
     @ManyToOne
     @JoinColumn(name = "support_agent_id")
-    @Column(nullable = false)
     private SupportAgent agentResponsible;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    @Column(nullable = false)
     private Customer customer;
 
     @OneToMany(mappedBy = "ticket")

@@ -45,7 +45,6 @@ public class SupportAgent {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    @Column(nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "agentResponsible")

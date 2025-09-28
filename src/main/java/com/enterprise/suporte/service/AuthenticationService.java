@@ -27,10 +27,10 @@ import java.util.List;
 @Service
 public class AuthenticationService {
 
-    private AuthorityRepository authorityRepository;
-    private PasswordEncoder passwordEncoder;
-    private UserRepository userRepository;
-    private UserMapper userMapper;
+    private final AuthorityRepository authorityRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Transactional
     public void updatePassword(UpdatePasswordDTO passwordDTO) {
@@ -69,7 +69,7 @@ public class AuthenticationService {
             throw new OperationNotAllowedException("Usuário não autenticado");
         }
 
-        return userRepository.findByEmail(userDetails.getUsername())
+        return userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new ResourceAccessException("Usuário não encontrado"));
     }
 
@@ -97,7 +97,7 @@ public class AuthenticationService {
     }
 
     private void validateUniqueEmail(String email) {
-        var user = userRepository.findByEmail(email);
+        var user = userRepository.findByUsername(email);
         if (user.isPresent()) {
             throw new BusinessException("Email já cadastrado: " + email);
         }

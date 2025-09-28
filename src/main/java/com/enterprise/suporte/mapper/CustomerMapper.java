@@ -14,7 +14,6 @@ public class CustomerMapper {
                 .email(customerDTO.email())
                 .password(customerDTO.password())
                 .phone(customerDTO.phone())
-                .createdAt(customerDTO.createdAt())
                 .build();
     }
 
