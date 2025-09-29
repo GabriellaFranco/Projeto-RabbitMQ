@@ -151,7 +151,7 @@ public class TicketServiceTest {
     @Test
     void createTicket_WhenCalled_ShouldCreateSuccessfully() {
         when(authenticationService.getLoggedUser()).thenReturn(user);
-        when(customerRepository.findCustomerByUser(user.getId())).thenReturn(customer);
+        when(customerRepository.findCustomerByUser_Id(user.getId())).thenReturn(customer);
         when(supportAgentRepository.findAll()).thenReturn(List.of(supportAgent));
         when(ticketMapper.toTicket(ticketRequestDTO, customer, supportAgent)).thenReturn(ticket);
         when(ticketRepository.save(ticket)).thenReturn(ticket);

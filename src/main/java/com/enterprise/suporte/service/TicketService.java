@@ -41,6 +41,7 @@ public class TicketService {
         return tickets.map(ticketMapper::toTicketResponseDTO);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR', 'ATENDENTE')")
     public TicketResponseDTO getTicketById(Long id) {
         return ticketRepository.findById(id).map(ticketMapper::toTicketResponseDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket não encontrado: " + id));
@@ -81,6 +82,8 @@ public class TicketService {
                 () -> new ResourceNotFoundException("Ticket não encontrado: " + ticketId));
 
         validateAssignPriority(ticket.getStatus());
+        ticketMapper.assignTicketPriority(priorityDTO, ticket);
+
         var savedTicket = ticketRepository.save(ticket);
         return ticketMapper.toTicketResponseDTO(savedTicket);
     }
