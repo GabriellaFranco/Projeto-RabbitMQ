@@ -4,21 +4,27 @@ import com.enterprise.suporte.dto.ticket.AssignTicketPriority;
 import com.enterprise.suporte.dto.ticket.TicketRequestDTO;
 import com.enterprise.suporte.dto.ticket.TicketResponseDTO;
 import com.enterprise.suporte.dto.ticket.UpdateTicketStatusDTO;
-import com.enterprise.suporte.enuns.TicketStatus;
 import com.enterprise.suporte.model.Customer;
+import com.enterprise.suporte.model.SupportAgent;
 import com.enterprise.suporte.model.Ticket;
+import com.enterprise.suporte.model.User;
+import com.enterprise.suporte.repository.CustomerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @Component
 public class TicketMapper {
 
-    public Ticket toTicket(TicketRequestDTO ticketDTO, Customer customer) {
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    public Ticket toTicket(TicketRequestDTO ticketDTO, Customer customer, SupportAgent agentResponsable) {
         return Ticket.builder()
                 .title(ticketDTO.title())
                 .description(ticketDTO.description())
+                .agentResponsible(agentResponsable)
                 .build();
     }
 

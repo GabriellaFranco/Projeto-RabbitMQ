@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.ResourceAccessException;
 
 @RequiredArgsConstructor
 @Service
@@ -20,13 +19,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR')")
     public Page<UserResponseDTO> getAllUsers(Pageable pageable) {
         var users = userRepository.findAll(pageable);
         return users.map(userMapper::toUserResponseDTO);
     }
 
-    @PreAuthorize("hasRole('ADMIN', 'ATENDENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR','ATENDENTE')")
     public UserResponseDTO getUserById(Long id) {
         return userRepository.findById(id).map(userMapper::toUserResponseDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado: " + id));

@@ -13,7 +13,6 @@ public class SupportAgentMapper {
                 .name(supportAgentDTO.name())
                 .email(supportAgentDTO.email())
                 .password(supportAgentDTO.password())
-                .maxCapacity(supportAgentDTO.maxCapacity())
                 .build();
     }
 
@@ -22,7 +21,6 @@ public class SupportAgentMapper {
                 .id(supportAgent.getId())
                 .name(supportAgent.getName())
                 .email(supportAgent.getEmail())
-                .maxCapacity(supportAgent.getMaxCapacity())
                 .status(supportAgent.getStatus())
                 .isActive(supportAgent.getIsActive())
                 .createdAt(supportAgent.getCreatedAt())

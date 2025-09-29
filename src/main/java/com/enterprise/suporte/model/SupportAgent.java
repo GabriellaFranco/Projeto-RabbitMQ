@@ -31,9 +31,6 @@ public class SupportAgent {
     private String password;
 
     @Column(nullable = false)
-    private int maxCapacity;
-
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AgentStatus status;
 

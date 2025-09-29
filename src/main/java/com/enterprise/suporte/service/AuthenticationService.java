@@ -106,6 +106,7 @@ public class AuthenticationService {
     private void assignRoleByProfile(User user) {
         var authorityName = switch (user.getProfile()) {
             case ADMIN -> "ADMIN";
+            case SUPERVISOR -> "SUPERVISOR";
             case ATENDENTE -> "ATENDENTE";
             case CLIENTE -> "CLIENTE";
         };
