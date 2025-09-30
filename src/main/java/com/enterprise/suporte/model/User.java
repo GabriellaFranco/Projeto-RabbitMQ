@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -55,5 +54,8 @@ public class User {
     @Nullable
     @OneToOne(mappedBy = "user")
     private SupportAgent supportAgent;
+
+    @OneToMany(mappedBy = "performedBy")
+    private List<TicketHistory> ticketHistories;
 
 }

@@ -65,11 +65,11 @@ public class AuthenticationService {
 
     protected User getLoggedUser() {
         var loggedUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!(loggedUser instanceof UserDetails userDetails)) {
+        if (!(loggedUser instanceof String username)) {
             throw new OperationNotAllowedException("Usuário não autenticado");
         }
 
-        return userRepository.findByUsername(userDetails.getUsername())
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceAccessException("Usuário não encontrado"));
     }
 

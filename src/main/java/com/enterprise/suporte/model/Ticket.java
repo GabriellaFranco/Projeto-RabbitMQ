@@ -7,8 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -28,7 +30,8 @@ public class Ticket {
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false)
+    @Nullable
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     private TicketPriority priority;
 
@@ -39,7 +42,8 @@ public class Ticket {
     @Column(nullable = false)
     private LocalDateTime openedAt;
 
-    @Column(nullable = false)
+    @Nullable
+    @Column(nullable = true)
     private LocalDateTime closedAt;
 
     @ManyToOne
@@ -50,10 +54,12 @@ public class Ticket {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @Builder.Default
     @OneToMany(mappedBy = "ticket")
-    private List<TicketHistory> ticketHistory;
+    private List<TicketHistory> ticketHistory = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "ticket")
-    private List<Notification> notifications;
+    private List<Notification> notifications = new ArrayList<>();
 
 }

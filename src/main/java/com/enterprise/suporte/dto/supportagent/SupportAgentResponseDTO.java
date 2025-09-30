@@ -3,9 +3,6 @@ package com.enterprise.suporte.dto.supportagent;
 import com.enterprise.suporte.enuns.AgentStatus;
 import com.enterprise.suporte.enuns.TicketPriority;
 import com.enterprise.suporte.enuns.TicketStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Builder;
 
 import java.time.LocalDate;

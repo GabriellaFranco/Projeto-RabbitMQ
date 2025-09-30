@@ -59,7 +59,7 @@ public class SupportAgentService {
     }
 
     @Transactional
-    @PreAuthorize("hasHole('ATENDENTE')")
+    @PreAuthorize("hasRole('ATENDENTE')")
     public void updateSupportAgentStatus(Long agentId, UpdateAgentStatusDTO updateDTO) {
         var supportAgent = supportAgentRepository.findById(agentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Atendente não encontrado: " + agentId));

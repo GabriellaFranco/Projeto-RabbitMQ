@@ -20,11 +20,11 @@ public class JWTUtil {
                 .toList();
 
         return Jwts.builder()
-                .setIssuer("stock-management")
+                .setIssuer("suporte")
                 .setSubject(user)
                 .claim("authorities", rolesWithPrefix)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000000 * 60 * 60))
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
                 .signWith(secretKey)
                 .compact();
     }
