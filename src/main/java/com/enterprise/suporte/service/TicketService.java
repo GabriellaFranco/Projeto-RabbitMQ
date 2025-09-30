@@ -1,9 +1,12 @@
 package com.enterprise.suporte.service;
 
+import com.enterprise.suporte.configuration.rabbit.RabbitConfig;
+import com.enterprise.suporte.dto.queue.TicketHistoryEventDTO;
 import com.enterprise.suporte.dto.ticket.AssignTicketPriority;
 import com.enterprise.suporte.dto.ticket.TicketRequestDTO;
 import com.enterprise.suporte.dto.ticket.TicketResponseDTO;
 import com.enterprise.suporte.dto.ticket.UpdateTicketStatusDTO;
+import com.enterprise.suporte.enuns.TicketEvent;
 import com.enterprise.suporte.enuns.TicketStatus;
 import com.enterprise.suporte.enuns.UserProfile;
 import com.enterprise.suporte.exception.BusinessException;
@@ -15,6 +18,7 @@ import com.enterprise.suporte.repository.CustomerRepository;
 import com.enterprise.suporte.repository.SupportAgentRepository;
 import com.enterprise.suporte.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +37,7 @@ public class TicketService {
     private final SupportAgentRepository supportAgentRepository;
     private final CustomerRepository customerRepository;
     private final AuthenticationService authenticationService;
+    private final TicketHistoryService ticketHistoryService;
     private final TicketMapper ticketMapper;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR')")
@@ -47,7 +52,7 @@ public class TicketService {
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket não encontrado: " + id));
     }
 
-    @PreAuthorize("hasAnyRole('CLIENTE', 'ATENDENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENTE', 'ATENDENTE')")
     public TicketResponseDTO createTicket(TicketRequestDTO ticketDTO) {
         var loggedUser = authenticationService.getLoggedUser();
         var customer = customerRepository.findCustomerByUser_Id(loggedUser.getId());
@@ -55,10 +60,17 @@ public class TicketService {
         var agentResponsible = validateAgentWithLessTickets(supportAgents);
 
         var ticket = ticketMapper.toTicket(ticketDTO, customer, agentResponsible);
+        ticket.setCustomer(customer);
         ticket.setStatus(TicketStatus.ABERTO);
         ticket.setOpenedAt(LocalDateTime.now());
-
         var savedTicket = ticketRepository.save(ticket);
+
+        ticketHistoryService.registerHistory(
+                savedTicket.getId(), TicketEvent.TICKET_CRIADO, savedTicket.getDescription(), savedTicket.getCustomer().getUser().getId());
+
+        ticketHistoryService.registerHistory(
+                savedTicket.getId(), TicketEvent.AGENTE_DESIGNADO, savedTicket.getDescription(), null);
+
         return ticketMapper.toTicketResponseDTO(savedTicket);
     }
 
@@ -70,8 +82,11 @@ public class TicketService {
 
         validateTicketStatusUpdate(statusDTO, ticket);
         ticketMapper.updateTicketStatus(statusDTO, ticket);
-
         var savedTicket = ticketRepository.save(ticket);
+
+        ticketHistoryService.registerHistory(savedTicket.getId(), TicketEvent.STATUS_ATUALIZADO,
+                "Status atualizado para: " + TicketEvent.STATUS_ATUALIZADO, savedTicket.getAgentResponsible().getUser().getId());
+
         return ticketMapper.toTicketResponseDTO(savedTicket);
     }
 
@@ -83,6 +98,9 @@ public class TicketService {
 
         validateAssignPriority(ticket.getStatus());
         ticketMapper.assignTicketPriority(priorityDTO, ticket);
+
+        ticketHistoryService.registerHistory(ticket.getId(), TicketEvent.PRIORIDADE_ATUALIZADA,
+                "Prioridade atualizada para: " + TicketEvent.PRIORIDADE_ATUALIZADA, ticket.getAgentResponsible().getId());
 
         var savedTicket = ticketRepository.save(ticket);
         return ticketMapper.toTicketResponseDTO(savedTicket);

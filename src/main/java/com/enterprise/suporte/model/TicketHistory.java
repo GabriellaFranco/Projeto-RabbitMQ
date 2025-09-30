@@ -1,5 +1,6 @@
 package com.enterprise.suporte.model;
 
+import com.enterprise.suporte.enuns.TicketEvent;
 import com.enterprise.suporte.enuns.TicketStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,8 @@ public class TicketHistory {
     private Ticket ticket;
 
     @Column(nullable = false)
-    private TicketStatus previousStatus;
+    @Enumerated(EnumType.STRING)
+    private TicketEvent event;
 
     @Column(nullable = false)
     private TicketStatus currentStatus;
@@ -34,4 +36,8 @@ public class TicketHistory {
 
     @Column(nullable = false)
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "performed_by")
+    private User performedBy;
 }

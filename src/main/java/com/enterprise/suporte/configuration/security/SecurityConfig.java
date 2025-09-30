@@ -42,8 +42,8 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(jwtTokenValidator, UsernamePasswordAuthenticationFilter.class);
 
-        http.formLogin(Customizer.withDefaults());
-        http.httpBasic(Customizer.withDefaults());
+        http.formLogin(AbstractHttpConfigurer::disable);
+        http.httpBasic(AbstractHttpConfigurer::disable);
 
         return http.build();
     }

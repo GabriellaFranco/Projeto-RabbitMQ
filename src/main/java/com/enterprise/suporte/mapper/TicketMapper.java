@@ -45,7 +45,6 @@ public class TicketMapper {
                         .build())
                 .history(ticket.getTicketHistory().stream().map(ticketHistory -> TicketResponseDTO.TicketHistoryDTO.builder()
                         .id(ticketHistory.getId())
-                        .previousStatus(ticketHistory.getPreviousStatus())
                         .newStatus(ticketHistory.getCurrentStatus())
                         .updatedAt(ticketHistory.getUpdatedAt())
                         .build()).toList())

@@ -22,5 +22,5 @@ public class Authority {
 
     @ManyToMany(mappedBy = "authorities", fetch = FetchType.EAGER,
             cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private List<User> users = new ArrayList<>();
+    private List<User> users;
 }
