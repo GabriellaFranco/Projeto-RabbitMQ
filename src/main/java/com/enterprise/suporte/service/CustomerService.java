@@ -2,6 +2,7 @@ package com.enterprise.suporte.service;
 
 import com.enterprise.suporte.dto.customer.CustomerRequestDTO;
 import com.enterprise.suporte.dto.customer.CustomerResponseDTO;
+import com.enterprise.suporte.dto.supportagent.UpdateAgentStatusDTO;
 import com.enterprise.suporte.enuns.UserProfile;
 import com.enterprise.suporte.exception.BusinessException;
 import com.enterprise.suporte.exception.ResourceNotFoundException;
@@ -64,6 +65,8 @@ public class CustomerService {
     public void deleteCustomer(Long id) {
         var customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado: " + id));
+
+        validateDeleteCustomer(customer.getIsActive());
         customerRepository.delete(customer);
     }
 
@@ -89,6 +92,12 @@ public class CustomerService {
                 .build();
 
         userRepository.save(userCreated);
+    }
+
+    void validateDeleteCustomer(Boolean isActive) {
+        if (isActive) {
+            throw new BusinessException("Não é possível excluir um cliente ativo");
+        }
     }
 
 }
