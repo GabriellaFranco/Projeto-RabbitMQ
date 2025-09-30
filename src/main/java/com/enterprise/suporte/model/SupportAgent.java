@@ -31,9 +31,6 @@ public class SupportAgent {
     private String password;
 
     @Column(nullable = false)
-    private int maxCapacity;
-
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AgentStatus status;
 
@@ -45,7 +42,6 @@ public class SupportAgent {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    @Column(nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "agentResponsible")

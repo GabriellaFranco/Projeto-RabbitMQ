@@ -16,6 +16,7 @@ import java.util.List;
 @Table(name = "customers")
 public class Customer {
 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -39,7 +40,6 @@ public class Customer {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    @Column(nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "customer")

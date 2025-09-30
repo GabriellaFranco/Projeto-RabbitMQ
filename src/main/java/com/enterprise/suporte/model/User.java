@@ -14,7 +14,8 @@ import java.util.List;
 
 @Builder
 @Data
-@AllArgsConstructor @NoArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
@@ -47,11 +48,11 @@ public class User {
     )
     private List<Authority> authorities;
 
-    @Column(nullable = true)
+    @Nullable
     @OneToOne(mappedBy = "user")
     private Customer customer;
 
-    @Column(nullable = true)
+    @Nullable
     @OneToOne(mappedBy = "user")
     private SupportAgent supportAgent;
 

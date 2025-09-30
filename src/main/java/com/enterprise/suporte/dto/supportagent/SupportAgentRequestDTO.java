@@ -18,11 +18,6 @@ public record SupportAgentRequestDTO(
 
         @NotBlank
         @Size(min = 6, max = 20, message = "A senha deve conter entre 6 e 20 caracteres")
-        String password,
-
-        @NotNull
-        @Pattern(regexp = "^[0-9]+$", message = "Apenas números são permitidos neste campo")
-        @Positive(message = "A capacidade máxima deve ser um valor positivo")
-        int maxCapacity
+        String password
 ) {
 }

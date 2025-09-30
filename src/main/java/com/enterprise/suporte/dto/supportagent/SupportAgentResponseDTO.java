@@ -16,7 +16,6 @@ public record SupportAgentResponseDTO(
         Long id,
         String name,
         String email,
-        int maxCapacity,
         AgentStatus status,
         Boolean isActive,
         LocalDate createdAt,

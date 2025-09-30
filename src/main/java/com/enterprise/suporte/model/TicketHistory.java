@@ -21,7 +21,6 @@ public class TicketHistory {
 
     @ManyToOne
     @JoinColumn(name = "ticket_id")
-    @Column(nullable = false)
     private Ticket ticket;
 
     @Column(nullable = false)

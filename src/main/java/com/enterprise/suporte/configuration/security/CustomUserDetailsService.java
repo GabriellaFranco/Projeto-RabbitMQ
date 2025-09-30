@@ -21,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = userRepository.findByEmail(username).orElseThrow(
+        var user = userRepository.findByUsername(username).orElseThrow(
                 () -> new ResourceAccessException("Usuário não encontrado:  " + username));
         if (!user.getIsActive()) {
             throw new BusinessException("Usuário desativado, contate o administrador");
@@ -29,6 +29,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         List<SimpleGrantedAuthority> authorities = user.getAuthorities().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getName())).toList();
-        return new User(user.getEmail(), user.getPassword(), authorities);
+        return new User(user.getUsername(), user.getPassword(), authorities);
     }
 }
