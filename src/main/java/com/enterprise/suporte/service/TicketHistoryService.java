@@ -4,7 +4,6 @@ import com.enterprise.suporte.configuration.rabbit.RabbitConfig;
 import com.enterprise.suporte.dto.queue.TicketHistoryEventDTO;
 import com.enterprise.suporte.enuns.TicketEvent;
 import com.enterprise.suporte.exception.ResourceNotFoundException;
-import com.enterprise.suporte.model.Ticket;
 import com.enterprise.suporte.model.TicketHistory;
 import com.enterprise.suporte.model.User;
 import com.enterprise.suporte.repository.TicketHistoryRepository;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service

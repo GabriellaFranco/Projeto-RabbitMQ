@@ -1,14 +1,10 @@
 package com.enterprise.suporte.service;
 
-import com.enterprise.suporte.configuration.rabbit.RabbitConfig;
-import com.enterprise.suporte.dto.queue.TicketHistoryEventDTO;
 import com.enterprise.suporte.dto.ticket.AssignTicketPriority;
 import com.enterprise.suporte.dto.ticket.TicketRequestDTO;
 import com.enterprise.suporte.dto.ticket.TicketResponseDTO;
 import com.enterprise.suporte.dto.ticket.UpdateTicketStatusDTO;
-import com.enterprise.suporte.enuns.TicketEvent;
-import com.enterprise.suporte.enuns.TicketStatus;
-import com.enterprise.suporte.enuns.UserProfile;
+import com.enterprise.suporte.enuns.*;
 import com.enterprise.suporte.exception.BusinessException;
 import com.enterprise.suporte.exception.ResourceNotFoundException;
 import com.enterprise.suporte.mapper.TicketMapper;
@@ -18,7 +14,6 @@ import com.enterprise.suporte.repository.CustomerRepository;
 import com.enterprise.suporte.repository.SupportAgentRepository;
 import com.enterprise.suporte.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,6 +32,7 @@ public class TicketService {
     private final SupportAgentRepository supportAgentRepository;
     private final CustomerRepository customerRepository;
     private final AuthenticationService authenticationService;
+    private final NotificationService notificationService;
     private final TicketHistoryService ticketHistoryService;
     private final TicketMapper ticketMapper;
 
@@ -67,9 +63,10 @@ public class TicketService {
 
         ticketHistoryService.registerHistory(
                 savedTicket.getId(), TicketEvent.TICKET_CRIADO, savedTicket.getDescription(), savedTicket.getCustomer().getUser().getId());
-
         ticketHistoryService.registerHistory(
                 savedTicket.getId(), TicketEvent.AGENTE_DESIGNADO, savedTicket.getDescription(), null);
+        notificationService.sendNotification(savedTicket.getId(), Channel.EMAIL, savedTicket.getCustomer().getEmail(),
+                TicketEvent.TICKET_CRIADO, "Tícket criado", NotificationStatus.PENDENTE);
 
         return ticketMapper.toTicketResponseDTO(savedTicket);
     }
@@ -86,6 +83,8 @@ public class TicketService {
 
         ticketHistoryService.registerHistory(savedTicket.getId(), TicketEvent.STATUS_ATUALIZADO,
                 "Status atualizado para: " + TicketEvent.STATUS_ATUALIZADO, savedTicket.getAgentResponsible().getUser().getId());
+        notificationService.sendNotification(savedTicket.getId(), Channel.EMAIL, savedTicket.getCustomer().getEmail(),
+                TicketEvent.STATUS_ATUALIZADO, "Status atualizado para: " + TicketEvent.STATUS_ATUALIZADO, NotificationStatus.PENDENTE);
 
         return ticketMapper.toTicketResponseDTO(savedTicket);
     }
