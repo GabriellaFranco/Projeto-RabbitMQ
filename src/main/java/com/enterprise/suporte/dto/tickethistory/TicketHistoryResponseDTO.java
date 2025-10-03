@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 @Builder
 public record TicketHistoryResponseDTO(
         Long ticketId,
-        TicketStatus previousStatus,
         TicketStatus currentStatus,
         LocalDateTime updatedAt
 ) {

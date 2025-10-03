@@ -56,7 +56,7 @@ public class TicketService {
         var supportAgent = supportAgentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Agente não encontrado"));
 
-        var tickets = ticketRepository.findAllByAgentId(supportAgent.getId(), pageable);
+        var tickets = ticketRepository.findAllByAgentResponsible_Id(supportAgent.getId(), pageable);
         return tickets.map(ticketMapper::toTicketResponseDTO);
     }
 
