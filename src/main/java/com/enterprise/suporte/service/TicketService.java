@@ -42,6 +42,24 @@ public class TicketService {
         return tickets.map(ticketMapper::toTicketResponseDTO);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR')")
+    public Page<TicketResponseDTO> getAllTicketsFromCustomer(Long id, Pageable pageable) {
+        var customer = customerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado: " + id));
+
+        var tickets = ticketRepository.findAllByCustomerId(id, pageable);
+        return tickets.map(ticketMapper::toTicketResponseDTO);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR')")
+    public Page<TicketResponseDTO> getAllTicketsFromAgent(Long id, Pageable pageable) {
+        var supportAgent = supportAgentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Agente não encontrado"));
+
+        var tickets = ticketRepository.findAllByAgentResponsible_Id(supportAgent.getId(), pageable);
+        return tickets.map(ticketMapper::toTicketResponseDTO);
+    }
+
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR', 'ATENDENTE')")
     public TicketResponseDTO getTicketById(Long id) {
         return ticketRepository.findById(id).map(ticketMapper::toTicketResponseDTO)

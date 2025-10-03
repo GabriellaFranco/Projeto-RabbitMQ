@@ -6,6 +6,7 @@ import com.enterprise.suporte.dto.supportagent.UpdateAgentStatusDTO;
 import com.enterprise.suporte.enuns.AgentStatus;
 import com.enterprise.suporte.enuns.UserProfile;
 import com.enterprise.suporte.exception.BusinessException;
+import com.enterprise.suporte.exception.OperationNotAllowedException;
 import com.enterprise.suporte.exception.ResourceNotFoundException;
 import com.enterprise.suporte.mapper.SupportAgentMapper;
 import com.enterprise.suporte.model.SupportAgent;
@@ -30,6 +31,7 @@ public class SupportAgentService {
     private final SupportAgentMapper supportAgentMapper;
     private final AuthorityRepository authorityRepository;
     private final UserRepository userRepository;
+    private final AuthenticationService authenticationService;
     private final PasswordEncoder passwordEncoder;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR')")
@@ -60,18 +62,22 @@ public class SupportAgentService {
 
     @Transactional
     @PreAuthorize("hasRole('ATENDENTE')")
-    public void updateSupportAgentStatus(Long agentId, UpdateAgentStatusDTO updateDTO) {
-        var supportAgent = supportAgentRepository.findById(agentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Atendente não encontrado: " + agentId));
-
-        validateUpdateAgentStatus(supportAgent, updateDTO);
-        supportAgent.setStatus(updateDTO.newStatus());
-        supportAgentRepository.save(supportAgent);
+    public void updateSupportAgentStatus(UpdateAgentStatusDTO updateDTO) {
+        var loggedUser = authenticationService.getLoggedUser();
+        var supportAgent = loggedUser.getSupportAgent();
+        if (supportAgent != null) {
+            validateUpdateAgentStatus(supportAgent, updateDTO);
+            supportAgent.setStatus(updateDTO.newStatus());
+            supportAgentRepository.save(supportAgent);
+        }
+        else {
+            throw new OperationNotAllowedException("Usuário logado não é um atendente");
+        }
     }
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    void deleteSupportAgent(Long id) {
+    public void deleteSupportAgent(Long id) {
         var supportAgent = supportAgentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Atendente não encontrado: " + id));
 

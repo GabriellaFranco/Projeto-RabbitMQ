@@ -14,7 +14,7 @@ public class RabbitConfig {
     public static final String TICKET_HISTORY_EXCHANGE = "ticket.history.exchange";
     public static final String TICKET_HISTORY_ROUTING_KEY = "ticket.history";
 
-    public static final String TICKET_HISTORY_DLQ_QUEUE = "ticket.history.dlq.queue";
+    public static final String TICKET_HISTORY_DLQ = "ticket.history.dlq.queue";
     public static final String TICKET_HISTORY_DLQ_EXCHANGE = "ticket.history.dlq.exchange";
     public static final String TICKET_HISTORY_DLQ_ROUTING_KEY = "ticket.history.dlq";
 
@@ -32,15 +32,15 @@ public class RabbitConfig {
     }
 
     @Bean
-    public Binding ticketHistoryBinding() {
-        return BindingBuilder.bind(ticketHistoryQueue())
-                .to(ticketHistoryExchange())
+    public Binding ticketHistoryBinding(Queue ticketHistoryQueue, DirectExchange ticketHistoryExchange) {
+        return BindingBuilder.bind(ticketHistoryQueue)
+                .to(ticketHistoryExchange)
                 .with(TICKET_HISTORY_ROUTING_KEY);
     }
 
     @Bean
-    public Queue ticketHistoryDlqQueue() {
-        return QueueBuilder.durable(TICKET_HISTORY_DLQ_QUEUE).build();
+    public Queue ticketHistoryDlq() {
+        return QueueBuilder.durable(TICKET_HISTORY_DLQ).build();
     }
 
     @Bean
@@ -49,9 +49,9 @@ public class RabbitConfig {
     }
 
     @Bean
-    public Binding ticketHistoryDlqBinding() {
-        return BindingBuilder.bind(ticketHistoryDlqQueue())
-                .to(ticketHistoryDlqExchange())
+    public Binding ticketHistoryDlqBinding(Queue ticketHistoryDlq, DirectExchange ticketHistoryDlqExchange) {
+        return BindingBuilder.bind(ticketHistoryDlq)
+                .to(ticketHistoryDlqExchange)
                 .with(TICKET_HISTORY_DLQ_ROUTING_KEY);
     }
 

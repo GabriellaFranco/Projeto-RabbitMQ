@@ -149,7 +149,7 @@ public class SupportAgentServiceTest {
         var statusDTO = new UpdateAgentStatusDTO(AgentStatus.OFFLINE);
         when(supportAgentRepository.save(supportAgent)).thenReturn(supportAgent);
 
-        supportAgentService.updateSupportAgentStatus(supportAgent.getId(), statusDTO);
+        supportAgentService.updateSupportAgentStatus(statusDTO);
 
         assertEquals(AgentStatus.OFFLINE, supportAgent.getStatus());
         assertEquals(1L, supportAgent.getId());
